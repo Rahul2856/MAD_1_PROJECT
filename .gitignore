@@ -8,3 +8,6 @@ __pycache__/
 
 # Ignore system-specific files
 .DS_Store
+
+quiz_master.db
+
