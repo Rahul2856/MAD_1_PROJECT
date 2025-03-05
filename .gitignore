@@ -1,13 +1,10 @@
-# Ignore the virtual environment
 venv/
 
-# Ignore Python bytecode files
 __pycache__/
+
+.env
+instance/
+*.sqlite3
 *.pyc
-*.pyo
 
-# Ignore system-specific files
-.DS_Store
-
-quiz_master.db
-
+migrations/
