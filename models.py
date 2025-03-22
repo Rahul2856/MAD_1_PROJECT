@@ -19,16 +19,16 @@ class Quiz(db.Model):
     name = db.Column(db.String(100), nullable=False)
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'), nullable=False)
 
+
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question_text = db.Column(db.String(200), nullable=False)
-
     quiz_id = db.Column(db.Integer, db.ForeignKey("quiz.id"), nullable=False)
+
 
 class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     score = db.Column(db.Integer, nullable=False)
-
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)
 
@@ -39,6 +39,7 @@ class Subject(db.Model):
 
     # One-to-Many: A subject has many chapters
     chapters = db.relationship('Chapter', backref='subject', lazy=True)
+
 
 class Chapter(db.Model):
     id = db.Column(db.Integer, primary_key=True)
