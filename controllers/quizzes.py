@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request
 from flask_login import login_required
-from app.models.quiz import Quiz, Question
+from app.models.model import Quiz, Question
 from app import db
 
 # ✅ Initialize Blueprint
