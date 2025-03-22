@@ -1,23 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Quiz Master</title>
-</head>
-<body>
-    <h2>Register</h2>
-    <form method="POST" action="{{ url_for('auth.register') }}">
-        <label for="username">Username:</label>
-        <input type="text" name="username" required>
-        <label for="password">Password:</label>
-        <input type="password" name="password" required>
-        <label for="full_name">Full Name:</label>
-        <input type="text" name="full_name" required>
-        <button type="submit">Register</button>
-    </form>
+{% extends 'base.html' %}
 
-    <!-- Login Link -->
-    <p>Already have an account? <a href="{{ url_for('auth.login') }}">Login</a></p>
-</body>
-</html>
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='register.css') }}">
+
+<h2>Register</h2>
+<form action="/register" method="POST">
+    <!-- Full Name -->
+    <div class="form-group">
+        <label for="full_name">Full Name</label>
+        <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required>
+    </div>
+
+    <!-- Username -->
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter a username" required>
+    </div>
+
+    <!-- Email -->
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email address">
+    </div>
+
+    <!-- Password -->
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+    </div>
+
+    <!-- Register Button -->
+    <button type="submit" class="btn">Register</button>
+</form>
+
+<!-- Footer Link -->
+<div class="form-footer">
+    <p>Already have an account? <a href="/login">Login</a></p>
+</div>
+
+{% endblock %}

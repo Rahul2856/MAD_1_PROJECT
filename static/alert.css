@@ -1,0 +1,30 @@
+/* Style for flash messages */
+body {
+    display: flex;
+    justify-self: center;
+}
+.alert-container {
+    margin-bottom: 20px;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.alert.success {
+    background-color: #28a745;
+    color: white;
+}
+
+.alert.error {
+    background-color: #dc3545;
+    color: white;
+}
+
+.alert.info {
+    background-color: #17a2b8;
+    color: white;
+}
