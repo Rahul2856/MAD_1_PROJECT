@@ -1,8 +1,8 @@
 from app import app
 from models import User, db
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from flask_login import login_user, logout_user, login_required, current_user
+from controllers.rbac import userlogin_required 
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask import render_template, request, redirect, url_for, flash, session
 
 
 @app.route("/")
@@ -76,10 +76,9 @@ def register():
     return render_template("register.html")
 
 
-# ✅ Logout Route
-@app.route("/logout")
-@login_required
+# Logout Route
+@app.route("/logout", methods=["POST"])
+@userlogin_required
 def logout():
-    logout_user()
-    flash("You have been logged out.", "info")
-    return redirect(url_for("auth.login"))
+    session.pop("user_id")
+    return redirect(url_for("login"))

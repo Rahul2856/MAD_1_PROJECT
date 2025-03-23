@@ -9,6 +9,11 @@
 
 <body>
     <div class="container">
+        {% if session['user_id'] %}
+        <form action="{{ url_for('logout') }}" method="post" style="text-align: right;">
+            <button type="submit">Logout</button>
+        </form>
+        {% endif %}
         {% block content %} {% endblock %}
     </div>
 </body>
