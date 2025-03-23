@@ -10,7 +10,7 @@ def home():
     return render_template("index.html")
 
 
-# ✅ Login Route (Checks Admin & User)
+# Login Route (Checks Admin & User)
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -39,7 +39,7 @@ def login():
     return render_template("login.html")
 
 
-# ✅ Register Route (Only for Normal Users)
+# Register Route (Only for Normal Users)
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -59,7 +59,7 @@ def register():
             flash("Email is already registered before, try logging in instead.")
             return redirect(url_for("login"))
 
-        # ✅ Hash the password and create a new user
+        # Hash the password and create a new user
         hashed_password = generate_password_hash(password)
         new_user = User(
             username=username,

@@ -1,12 +1,9 @@
-# from flask import Blueprint, render_template,redirect,url_for
-# from flask_login import login_required, current_user
+from flask import render_template
+from flask_login import login_required
+from app import app
 
-# user_dashboard_bp = Blueprint('user_dashboard', __name__,template_folder="../templates")  
 
-# user_dashboard_bp.route("/dashboard")
-# @login_required
-# def user_dashboard():
-#     if current_user.is_admin:
-#         return redirect(url_for("admin_dashboard.admin_dashboard"))  # ✅ Restrict admin users
-#     return render_template("user_dashboard.html")
-
+@app.route("/user_dashboard")
+@login_required
+def user_dashboard():
+    return render_template("user_templates/user_dashboard.html")
