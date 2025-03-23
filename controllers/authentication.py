@@ -1,6 +1,6 @@
 from app import app
 from models import User, db
-from controllers.rbac import userlogin_required 
+from controllers.rbac import userlogin_required
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask import render_template, request, redirect, url_for, flash, session
 
@@ -32,9 +32,9 @@ def login():
         session["is_admin"] = user.is_admin
 
         if user.is_admin:
-            return render_template("admin_templates/admin_dashboard.html")
+            return redirect(url_for("admin_dashboard"))
         else:
-            return render_template("user_templates/user_dashboard.html")
+            return redirect(url_for("user_dashboard"))
 
     return render_template("login.html")
 

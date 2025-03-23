@@ -1,12 +1,27 @@
-from flask import Blueprint, render_template,redirect,url_for,flash
-from flask_login import login_required, current_user
+from app import app
+from flask import render_template
+from controllers.rbac import adminlogin_required
 
-admin_bp = Blueprint("admin", __name__, template_folder="../templates")
 
-@admin_bp.route("/admin_dashboard")
-@login_required
+@adminlogin_required
+@app.route("/admin_dashboard")
 def admin_dashboard():
-    if not current_user.is_admin:
-        flash("Unauthorized access!", "danger")
-        return redirect(url_for("user_dashboard.dashboard_page"))  # ✅ Prevent normal users from admin access
-    return render_template("admin_dashboard.html", user=current_user)
+    return render_template("admin_templates/admin_dashboard.html")
+
+
+@adminlogin_required
+@app.route("/add_subject", methods=["GET", "POST"])
+def add_subject():
+    # if request.method == "POST":
+    #     subject_name = request.form.get("subject_name")
+
+    #     if subject_name:
+    #         # Create a new subject and add it to the database
+    #         new_subject = Subject(name=subject_name)
+    #         db.session.add(new_subject)
+    #         db.session.commit()
+
+    #         # Redirect to the subjects list (or any other page, such as the dashboard)
+    #         return redirect(url_for("list_subjects"))
+
+    return render_template("admin_templates/add_subject.html")
