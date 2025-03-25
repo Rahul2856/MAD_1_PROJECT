@@ -1,4 +1,51 @@
-<!DOCTYPE html>
+{%extends "base.html"%}
+
+{% block title %}Quiz Master{% endblock %}
+
+{%block content%}
+
+<a href="{{url_for('add_subject')}}" class="btn btn-success">
+    <i class="fas fa-plus"></i>
+    Add Subject
+</a>
+ <div class="subject-list">
+    {% for subject in subjects %}
+    <div class="subject-item">
+      <h3>{{ subject.name }}</h3>
+      <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn btn-warning">Edit</a>
+                     <!-- Delete button -->
+      <form action="{{ url_for('delete_subject', subject_id=subject.id) }}" method="POST" style="display:inline;">
+      <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+    </div>
+    {% endfor %}  
+ </div>   
+{%endblock%}
+
+
+
+<!-- <div class="subject-list">
+    {% for subject in subjects %}
+      <div class="subject-item">
+        <h3>{{ subject.name }}</h3>
+        <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn btn-warning">Edit</a>
+      </div>
+    {% endfor %}
+  </div> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -14,4 +61,4 @@
     </a>
 </body>
 
-</html>
+</html> -->
