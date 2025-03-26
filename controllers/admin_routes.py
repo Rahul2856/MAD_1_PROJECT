@@ -101,3 +101,44 @@ def add_chapter(subject_id):
     
     return render_template('admin_templates/add_chapter.html',subject=subject)
 
+@app.route("/edit_chapter/<int:chapter_id>", methods=["GET", "POST"])
+@adminlogin_required
+def edit_chapter(chapter_id):
+   
+    chapter = Chapter.query.get_or_404(chapter_id)
+    
+    if request.method == "POST":
+      
+        chapter_name = request.form.get("chapter_name")
+        chapter_description = request.form.get("description")
+        
+        # Update chapter details
+        chapter.name = chapter_name
+        chapter.description = chapter_description
+        db.session.commit()  # Save changes to the database
+
+        # Flash success message
+        flash("Chapter updated successfully!", "success")
+
+        # Redirect back to the subject's edit page
+        return redirect(url_for("edit_chapter", chapter_id=chapter.id))
+
+    # Render the edit chapter form
+    return render_template("admin_templates/edit_chapter.html", chapter=chapter)
+
+
+@app.route("/delete_chapter/<int:chapter_id>", methods=["POST"])
+@adminlogin_required
+def delete_chapter(chapter_id):
+    # Find the chapter by ID
+    chapter = Chapter.query.get_or_404(chapter_id)
+    
+    # Delete the chapter
+    db.session.delete(chapter)
+    db.session.commit()
+
+    # Flash success message
+    flash("Chapter deleted successfully!", "success")
+
+    # Redirect back to the subject's edit page
+    return redirect(url_for("admin_dashboard", subject_id=chapter.subject_id))

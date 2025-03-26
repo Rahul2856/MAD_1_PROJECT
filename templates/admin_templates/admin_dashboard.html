@@ -13,67 +13,83 @@
 
   {# Use cards for each subject for better visual grouping #}
   {% for subject in subjects %}
-    <div class="card mb-4">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        {# Subject Name #}
-        <h3 class="mb-0">{{ subject.name }}</h3>
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      {# Subject Name #}
+      <h3 class="mb-0">{{ subject.name }}</h3>
 
-        {# Subject Action Buttons #}
-        <div>
-          <!-- Edit Subject Button -->
-          <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn btn-sm btn-warning me-2">
-            <i class="fas fa-pencil-alt"></i> Edit
-          </a>
+      {# Subject Action Buttons #}
+      <div>
+        <!-- Edit Subject Button -->
+        <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn btn-sm btn-warning me-2">
+          <i class="fas fa-pencil-alt"></i> Edit Subject
+        </a>
 
-          <!-- Delete Subject Button -->
-          <form action="{{ url_for('delete_subject', subject_id=subject.id) }}" method="POST" class="d-inline">
-            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this subject and all its chapters/quizzes?');">
-                {# Added confirmation dialog #}
-                <i class="fas fa-trash-alt"></i> Delete
-            </button>
-          </form>
-        </div>
-      </div> {# End card-header #}
+        <!-- Delete Subject Button -->
+        <form action="{{ url_for('delete_subject', subject_id=subject.id) }}" method="POST" class="d-inline">
+          <button type="submit" class="btn btn-sm btn-danger"
+            onclick="return confirm('Are you sure you want to delete this subject and all its chapters/quizzes?');">
+            {# Added confirmation dialog #}
+            <i class="fas fa-trash-alt"></i> Delete Subject
+          </button>
+        </form>
+      </div>
+    </div> {# End card-header #}
 
-      <div class="card-body">
-        {# Display Chapters under the Subject #}
-        <h4 class="mb-3">Chapters</h4>
-        <table class="table table-striped table-hover table-bordered table-sm"> {# Added Bootstrap table classes #}
-          <thead class="table-light"> {# Added subtle header background #}
-            <tr>
-              <th scope="col">Chapter Name</th>
-              <th scope="col">No. of Questions</th>
-              <th scope="col" style="width: 15%;">Action</th> {# Added width hint for action column #}
-            </tr>
-          </thead>
-          <tbody>
-            {% for chapter in subject.chapters %}
-              <tr>
-                <td>{{ chapter.name }}</td>
-                <td>{{ chapter.quizzes | length }}</td>  {# Display number of quizzes #}
+    <div class="card-body">
+      {# Display Chapters under the Subject #}
+      <h4 class="mb-3">Chapters</h4>
+      <table class="table table-striped table-hover table-bordered table-sm"> {# Added Bootstrap table classes #}
+        <thead class="table-light"> {# Added subtle header background #}
+          <tr>
+            <th scope="col">Chapter Name</th>
+            <th scope="col">No. of Questions</th>
+            <th scope="col" style="width: 15%;">Action</th> {# Added width hint for action column #}
+          </tr>
+        </thead>
+        <tbody>
+          {% for chapter in subject.chapters %}
+          <tr>
+            <td>{{ chapter.name }}</td>
+            <td>{{ chapter.quizzes | length }}</td> {# Display number of quizzes #}
+            <td>
+              <!-- Edit Chapter Button -->
+              <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}"
+                class="btn btn-sm btn-outline-warning me-1"> {# Used outline style, adjusted margin #}
+                <i class="fas fa-pencil-alt"></i> Edit
+              </a>
+              <!-- Delete Chapter Button -->
+              <form action="{{ url_for('delete_chapter', chapter_id=chapter.id) }}" method="POST" class="d-inline">
+                <button type="submit" class="btn btn-sm btn-outline-danger"
+                  onclick="return confirm('Are you sure you want to delete this chapter and all its quizzes?');"> {#
+                  Used outline style, added confirmation #}
+                  <i class="fas fa-trash-alt"></i> Delete
+                </button>
+              </form>
+            </td>
 
-              </tr>
-            {% else %}
-              <tr>
-                {# Added text-center and text-muted for empty state #}
-                <td colspan="3" class="text-center text-muted fst-italic">No chapters available for this subject.</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+          </tr>
+          {% else %}
+          <tr>
+            {# Added text-center and text-muted for empty state #}
+            <td colspan="3" class="text-center text-muted fst-italic">No chapters available for this subject.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
 
-        <!-- Add New Chapter Button -->
-        <div class="mt-3"> {# Added margin-top for spacing #}
-            <a href="{{ url_for('add_chapter', subject_id=subject.id) }}" class="btn btn-sm btn-primary">
-                <i class="fas fa-plus"></i> Add Chapter
-            </a>
-        </div>
-      </div> {# End card-body #}
-    </div> {# End card #}
+      <!-- Add New Chapter Button -->
+      <div class="mt-3"> {# Added margin-top for spacing #}
+        <a href="{{ url_for('add_chapter', subject_id=subject.id) }}" class="btn btn-sm btn-primary">
+          <i class="fas fa-plus"></i> Add Chapter
+        </a>
+      </div>
+    </div> {# End card-body #}
+  </div> {# End card #}
   {% else %}
-    <div class="alert alert-info" role="alert">
-      No subjects found. Click 'Add Subject' to create one.
-    </div>
+  <div class="alert alert-info" role="alert">
+    No subjects found. Click 'Add Subject' to create one.
+  </div>
   {% endfor %}
 </div> {# End container #}
 {% endblock %}
