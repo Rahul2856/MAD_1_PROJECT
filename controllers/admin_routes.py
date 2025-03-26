@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template,request,redirect, url_for, flash
 from controllers.rbac import adminlogin_required
-from models import Subject ,db 
+from models import Subject ,db ,Chapter
 
 @adminlogin_required
 @app.route("/admin_dashboard")
@@ -32,7 +32,7 @@ def add_subject():
 @app.route("/edit_subject/<int:subject_id>", methods=['GET','POST'])
 def edit_subject(subject_id):
     subject = Subject.query.get_or_404(subject_id)
-
+   
     # If the form is submitted (POST method)
     if request.method == 'POST':
         # Get data from the form
@@ -70,5 +70,34 @@ def delete_subject(subject_id):
 
 
 
+#section for add/edit/delete of chapters
 
+@adminlogin_required
+@app.route("/add_chapter/<int:subject_id>",methods=['GET','POST'])
+def add_chapter(subject_id):
+    subject = Subject.query.get_or_404(subject_id)
+
+    if request.method == "POST":
+        # Get chapter name and description from the form
+        chapter_name = request.form.get("chapter_name")
+        chapter_description = request.form.get("description")
+
+         
+        if not chapter_name:
+            flash("Chapter name is required!", "error")
+            return redirect(url_for("add_chapter", subject_id=subject.id))
+        
+        new_chapter = Chapter(
+        name=chapter_name,
+        description=chapter_description,  
+        subject_id=subject.id
+        )
+
+        db.session.add(new_chapter)
+        db.session.commit()
+
+        flash("Chapter added successfully!", "success")
+        return redirect(url_for("add_chapter", subject_id=subject.id))
+    
+    return render_template('admin_templates/add_chapter.html',subject=subject)
 
