@@ -70,4 +70,3 @@ with app.app_context():
         db.session.commit()
 
 print("Database Setup Complete!")
-

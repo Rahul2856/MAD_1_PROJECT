@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template,request,redirect, url_for, flash
 from controllers.rbac import adminlogin_required
-from models import Subject ,db ,Chapter
+from models import Subject ,db ,Chapter, Quiz
 
 @adminlogin_required
 @app.route("/admin_dashboard")
@@ -142,3 +142,66 @@ def delete_chapter(chapter_id):
 
     # Redirect back to the subject's edit page
     return redirect(url_for("admin_dashboard", subject_id=chapter.subject_id))
+
+
+#section for add/edit/delete of quizzes
+
+@app.route("/quiz_management", methods=["GET", "POST"]) 
+@adminlogin_required
+def quiz_management():
+    quizzes = Quiz.query.all()
+    chapter = Subject.query.all()
+    return render_template("admin_templates/quiz_management.html", quizzes=quizzes, chapter=chapter)
+
+
+
+# @app.route("/add_quiz/<int:chapter_id>", methods=["GET", "POST"])
+# @adminlogin_required
+# def add_quiz(chapter_id):
+    
+#     chapter = Chapter.query.get_or_404(chapter_id)
+
+#     # Handle POST request (when the form is submitted)
+#     if request.method == "POST":
+#         quiz_title = request.form.get("quiz_title")
+
+#         # If quiz title is provided
+#         if quiz_title:
+#             # Create a new Quiz instance
+#             new_quiz = Quiz(
+#                 title=quiz_title,
+#                 chapter_id=chapter.id  # Associate quiz with the chapter
+#             )
+#             # Add the new quiz to the database session
+#             db.session.add(new_quiz)
+#             db.session.commit()  # Commit to the database
+         
+#             flash("Quiz added successfully!", "success")            
+   
+#             return redirect(url_for("add_quiz", chapter_id=chapter.id))
+
+#     # Render the add_quiz form
+#     return render_template("admin_templates/add_quiz.html", chapter=chapter)
+
+
+# @app.route("/add_quiz/<int:chapter_id>", methods=["GET", "POST"])
+# @adminlogin_required
+# def add_quiz(chapter_id):
+#     chapter = Chapter.query.get_or_404(chapter_id)
+
+#     if request.method == "POST":
+#         quiz_title = request.form.get("quiz_title")
+
+#         if quiz_title:
+#             # Create a new quiz under the chapter
+#             new_quiz = Quiz(
+#                 title=quiz_title,
+#                 chapter_id=chapter.id
+#             )
+#             db.session.add(new_quiz)
+#             db.session.commit()
+
+#             flash("Quiz added successfully!", "success")
+#             return redirect(url_for("edit_chapter", chapter_id=chapter.id))
+
+#     return render_template("admin_templates/add_quiz.html", chapter=chapter)
