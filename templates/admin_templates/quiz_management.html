@@ -4,52 +4,47 @@
   <div class="container mt-4">
     <h2>Quiz Management</h2>
 
-    <!-- Search Input for quizzes -->
+    <a href = "{{url_for('add_quiz')}} " class="btn btn-primary mb-3">Add Quiz</a>
+
     <div class="form-group mb-3">
       <label for="quizSearch">Search Quizzes</label>
-      <input type="text" id="quizSearch" class="form-control" placeholder="Search for a quiz...">
+      <input type="text" id="quizSearch" class="form-control" placeholder="Search by quiz, subject, or chapter...">
     </div>
 
-    <!-- Quiz List Table -->
     <div class="row">
       <div class="col-12">
         <table class="table table-bordered">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Quiz Title</th>
+              <th>Quiz Name</th>
+              <th>Subject</th>
+              <th>Chapter</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody id="quizTableBody">
             {% for quiz in quizzes %}
               <tr>
-                <td>{{ quiz.id }}</td>
-                <td>{{ quiz.title }}</td>
+                <td>{{ quiz.name }}</td>
+                <td>{{ quiz.subject.name }}</td>
+                <td>{{ quiz.chapter.name }}</td>
                 <td>
-                  <!-- Edit Quiz Button -->
-                  <a href="{{ url_for('edit_quiz', quiz_id=quiz.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                  <a  class="btn btn-warning btn-sm">Edit</a>
 
-                  <!-- Delete Quiz Button -->
-                  <form action="{{ url_for('delete_quiz', quiz_id=quiz.id) }}" method="POST" style="display:inline;">
-                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                  </form>
+                
 
-                  <!-- Add Question Button -->
-                  <a href="{{ url_for('add_question', quiz_id=quiz.id) }}" class="btn btn-info btn-sm">+ Question</a>
+                  <a  class="btn btn-info btn-sm">+ Question</a>
                 </td>
               </tr>
             {% else %}
               <tr>
-                <td colspan="3" class="text-center">No quizzes available.</td>
+                <td colspan="4" class="text-center">No quizzes available.</td>
               </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
-
- 
   </div>
 
   <script>
@@ -58,8 +53,14 @@
       const filter = this.value.toLowerCase();
       const rows = document.querySelectorAll('#quizTableBody tr');
       rows.forEach(row => {
-        const quizTitle = row.cells[1].textContent.toLowerCase();
-        if (quizTitle.indexOf(filter) > -1) {
+        const quizName = row.cells[0].textContent.toLowerCase();
+        const subjectName = row.cells[1].textContent.toLowerCase();
+        const chapterName = row.cells[2].textContent.toLowerCase();
+        if (
+          quizName.indexOf(filter) > -1 ||
+          subjectName.indexOf(filter) > -1 ||
+          chapterName.indexOf(filter) > -1
+        ) {
           row.style.display = '';
         } else {
           row.style.display = 'none';

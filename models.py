@@ -6,19 +6,23 @@ from app import app
 db = SQLAlchemy(app)
 
 
-class User(db.Model):  # ✅ Make sure db.Model is used correctly
+class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     full_name = db.Column(db.String(100), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+    scores = db.relationship("Score", backref="user", lazy=True)
 
 
 class Quiz(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     chapter_id = db.Column(db.Integer, db.ForeignKey("chapter.id"), nullable=False)
+    subject_id = db.Column(db.Integer, db.ForeignKey("subject.id"), nullable=False)
+    questions = db.relationship("Question", backref="quiz", lazy=True)
+    scores = db.relationship("Score", backref="quiz", lazy=True)
 
 
 class Question(db.Model):
@@ -37,9 +41,8 @@ class Score(db.Model):
 class Subject(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-
-    # One-to-Many: A subject has many chapters
     chapters = db.relationship("Chapter", backref="subject", lazy=True)
+    quizzes = db.relationship("Quiz", backref="subject", lazy=True) # Direct relationship
 
 
 class Chapter(db.Model):
@@ -47,8 +50,6 @@ class Chapter(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(255), nullable=True)
     subject_id = db.Column(db.Integer, db.ForeignKey("subject.id"), nullable=False)
-
-    # One-to-Many: A chapter has many quizzes
     quizzes = db.relationship("Quiz", backref="chapter", lazy=True)
 
 

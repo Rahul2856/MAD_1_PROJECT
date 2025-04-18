@@ -154,4 +154,36 @@ def quiz_management():
     return render_template("admin_templates/quiz_management.html", quizzes=quizzes, chapter=chapter)
 
 
+@app.route('/add_quiz', methods=['GET', 'POST'])
+def add_quiz():
+    if request.method == 'POST':
+        quiz_name = request.form['quiz_name']
+        subject_id = request.form['subject_id']
+        chapter_id = request.form['chapter_id']
+
+        # Basic validation
+        if not quiz_name or not subject_id or not chapter_id:
+            flash('Please fill in all fields.', 'error')  
+            return render_template('admin_templates/add_quiz.html', subjects=Subject.query.all(), chapters=Chapter.query.all())
+
+        # Check if subject and chapter exist
+        subject = Subject.query.get(subject_id)
+        chapter = Chapter.query.get(chapter_id)
+        if not subject or not chapter:
+            flash('Invalid subject or chapter.', 'error')
+            return render_template('admin_templates/add_quiz.html', subjects=Subject.query.all(), chapters=Chapter.query.all())
+
+        # Create the new quiz
+        new_quiz = Quiz(name=quiz_name, subject_id=subject_id, chapter_id=chapter_id)
+        db.session.add(new_quiz)
+        db.session.commit()
+
+        flash('Quiz added successfully!', 'success')  
+        return redirect(url_for('quiz_management'))  # Redirect to quiz management page
+
+    # If it's a GET request, just render the form
+    subjects = Subject.query.all()
+    chapters = Chapter.query.all()
+    return render_template('admin_templates/add_quiz.html', subjects=subjects, chapters=chapters)
+
 
