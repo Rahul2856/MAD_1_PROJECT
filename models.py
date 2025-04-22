@@ -27,9 +27,18 @@ class Quiz(db.Model):
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    question_text = db.Column(db.String(200), nullable=False)
+    question_title = db.Column(db.String(200), nullable=False)  # Added question_title
+    question_statement = db.Column(db.String(200), nullable=False) # Added question_statement
     quiz_id = db.Column(db.Integer, db.ForeignKey("quiz.id"), nullable=False)
+    options = db.relationship('Option', backref='question', lazy=True) # Added relationship to Option   
 
+
+class Option(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
+    option_text = db.Column(db.String(255), nullable=False)
+    is_correct = db.Column(db.Boolean, default=False)  # Add this field
+    
 
 class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)

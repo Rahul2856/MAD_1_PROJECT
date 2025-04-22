@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Add New Question</h2>
+    <form method="POST" action="{{ url_for('add_question', quiz_id=quiz.id) }}">
+        <div class="form-group">
+            <label for="chapter_id">Chapter:</label>
+            <select class="form-control" id="chapter_id" name="chapter_id" required>
+                <option value="" disabled selected>Select a Chapter</option>
+                {% for chapter in chapters %}
+                    <option value="{{ chapter.id }}">{{ chapter.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="question_title">Question Title:</label>
+            <input type="text" class="form-control" id="question_title" name="question_title" required>
+        </div>
+        <div class="form-group">
+            <label for="question_statement">Question Statement:</label>
+            <textarea class="form-control" id="question_statement" name="question_statement" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Options:</label>
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="radio" name="correct_option" value="option1" required>
+                    </div>
+                </div>
+                <input type="text" class="form-control" name="option1" placeholder="Option 1" required>
+            </div>
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="radio" name="correct_option" value="option2">
+                    </div>
+                </div>
+                <input type="text" class="form-control" name="option2" placeholder="Option 2" required>
+            </div>
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="radio" name="correct_option" value="option3">
+                    </div>
+                </div>
+                <input type="text" class="form-control" name="option3" placeholder="Option 3" required>
+            </div>
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <input type="radio" name="correct_option" value="option4">
+                    </div>
+                </div>
+                <input type="text" class="form-control" name="option4" placeholder="Option 4" required>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Question</button>
+        <a href="{{ url_for('quiz_management') }}" class="btn btn-secondary">Close</a>
+    </form>
+</div>
+{% endblock %}

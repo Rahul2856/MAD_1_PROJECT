@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template,request,redirect, url_for, flash
 from controllers.rbac import adminlogin_required
-from models import Subject ,db ,Chapter, Quiz
+from models import Subject ,db ,Chapter, Quiz, Question
 
 @adminlogin_required
 @app.route("/admin_dashboard")
@@ -185,5 +185,29 @@ def add_quiz():
     subjects = Subject.query.all()
     chapters = Chapter.query.all()
     return render_template('admin_templates/add_quiz.html', subjects=subjects, chapters=chapters)
+
+@app.route('/add_question/<int:quiz_id>', methods=['GET', 'POST'])
+def add_question(quiz_id):
+    
+
+    quiz = Quiz.query.get_or_404(quiz_id)  # Get the quiz or return 404 if not found
+
+    if request.method == 'POST':
+        question_text = request.form['question_text']
+
+        # Basic validation
+        if not question_text:
+            flash('Please enter the question text.', 'error')
+            return render_template('admin_templates/add_question.html', quiz=quiz)
+
+        # Create the new question
+        new_question = Question(question_text=question_text, quiz_id=quiz_id)
+        db.session.add(new_question)
+        db.session.commit()
+
+        flash('Question added successfully!', 'success')
+        return redirect(url_for('quiz_management'))  # Redirect to quiz management 
+
+    return render_template('admin_templates/add_question.html', quiz=quiz)
 
 
