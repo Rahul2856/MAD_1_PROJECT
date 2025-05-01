@@ -29,7 +29,7 @@
                 <td>{{ quiz.subject.name }}</td>
                 <td>{{ quiz.chapter.name }}</td>
                 <td>
-                  <a  class="btn btn-warning btn-sm">Edit</a>
+                  <a href="{{url_for('edit_quiz',quiz_id=quiz.id)}}"  class="btn btn-warning btn-sm">Edit</a>
 
                 
 

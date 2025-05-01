@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template,request,redirect, url_for, flash
 from controllers.rbac import adminlogin_required
-from models import Subject ,db ,Chapter, Quiz, Question
+from models import Subject ,db ,Chapter, Quiz, Question, Option
 
 @adminlogin_required
 @app.route("/admin_dashboard")
@@ -186,28 +186,87 @@ def add_quiz():
     chapters = Chapter.query.all()
     return render_template('admin_templates/add_quiz.html', subjects=subjects, chapters=chapters)
 
-@app.route('/add_question/<int:quiz_id>', methods=['GET', 'POST'])
-def add_question(quiz_id):
-    
-
-    quiz = Quiz.query.get_or_404(quiz_id)  # Get the quiz or return 404 if not found
+@app.route('/edit_quiz/<int:quiz_id>', methods=['GET', 'POST'])
+def edit_quiz(quiz_id):
+    quiz = Quiz.query.get_or_404(quiz_id)  # Get the quiz to edit
 
     if request.method == 'POST':
-        question_text = request.form['question_text']
+        # Get data from the form
+        quiz.name = request.form['quiz_name']
+        subject_id = request.form['subject_id']
+        chapter_id = request.form['chapter_id']
 
         # Basic validation
-        if not question_text:
-            flash('Please enter the question text.', 'error')
-            return render_template('admin_templates/add_question.html', quiz=quiz)
+        if not quiz.name or not subject_id or not chapter_id:
+            flash('Please fill in all fields.', 'error')
+            subjects = Subject.query.all()
+            chapters = Chapter.query.all()
+            return render_template('admin_templates/edit_quiz.html', quiz=quiz, subjects=subjects, chapters=chapters)
+
+        # Check if subject and chapter exist
+        subject = Subject.query.get(subject_id)
+        chapter = Chapter.query.get(chapter_id)
+        if not subject or not chapter:
+            flash('Invalid subject or chapter.', 'error')
+            subjects = Subject.query.all()
+            chapters = Chapter.query.all()
+            return render_template('admin_templates/edit_quiz.html', quiz=quiz, subjects=subjects, chapters=chapters)
+
+        # Update the quiz
+        quiz.subject_id = subject_id
+        quiz.chapter_id = chapter_id
+        db.session.commit()
+        flash('Quiz updated successfully!', 'success')
+        return redirect(url_for('quiz_management'))  # Redirect to quiz management
+
+    # If it's a GET request, render the form with the quiz data
+    subjects = Subject.query.all()
+    chapters = Chapter.query.all()
+    return render_template('admin_templates/edit_quiz.html', quiz=quiz, subjects=subjects, chapters=chapters)
+
+
+@app.route('/add_question/<int:quiz_id>', methods=['GET', 'POST'])
+def add_question(quiz_id):
+    quiz = Quiz.query.get_or_404(quiz_id)
+    chapters = Chapter.query.all()
+
+    if request.method == 'POST':
+        question_title = request.form['question_title']
+        question_statement = request.form['question_statement']
+        option1_text = request.form['option1']
+        option2_text = request.form['option2']
+        option3_text = request.form['option3']
+        option4_text = request.form['option4']
+        correct_option = request.form['correct_option']  # Get the selected option
+
+        # Basic validation (add more as needed)
+        if not question_statement or not question_title or not correct_option:
+            flash('Please fill in all required fields.', 'error')
+            return render_template('admin_templates/add_question.html', quiz=quiz, chapters=chapters)
 
         # Create the new question
-        new_question = Question(question_text=question_text, quiz_id=quiz_id)
+        new_question = Question(question_title=question_title, question_statement=question_statement, quiz_id=quiz_id) # Added chapter_id
         db.session.add(new_question)
+        db.session.flush()  # To get the new question's ID
+
+        # Create the options and set is_correct
+        options_data = [
+            {'text': option1_text, 'value': 'option1'},
+            {'text': option2_text, 'value': 'option2'},
+            {'text': option3_text, 'value': 'option3'},
+            {'text': option4_text, 'value': 'option4'},
+        ]
+
+        for option_data in options_data:
+            is_correct = (option_data['value'] == correct_option)
+            option = Option(question_id=new_question.id, option_text=option_data['text'], is_correct=is_correct)
+            db.session.add(option)
+
         db.session.commit()
 
-        flash('Question added successfully!', 'success')
-        return redirect(url_for('quiz_management'))  # Redirect to quiz management 
+        flash('Question and options added successfully!', 'success')
+        return redirect(url_for('quiz_management'))
 
-    return render_template('admin_templates/add_question.html', quiz=quiz)
+    return render_template('admin_templates/add_question.html', quiz=quiz, chapters=chapters)
 
 
